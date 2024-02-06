@@ -12,7 +12,8 @@ public class Program
         var appSettings = FileReader.ReadAppSettings("appsettings.json");
         var encodedPat = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{appSettings.FromPat}"));
         var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedPat);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedPat);
 
 
         var query = new
@@ -21,8 +22,9 @@ public class Program
         };
 
         var content = JsonSerializer.Serialize(query);
-        var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0", new StringContent(content, Encoding.UTF8, "application/json")).Result;
-
-        Console.WriteLine(result.Content.ReadAsStringAsync().Result);
+        var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0",
+            new StringContent(content, Encoding.UTF8, "application/json")).Result;
+        var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
+        queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
     }
 }
