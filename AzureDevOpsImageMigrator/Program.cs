@@ -26,5 +26,11 @@ public class Program
             new StringContent(content, Encoding.UTF8, "application/json")).Result;
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
+
+
+        var s = client.PostAsync(queryResult.WorkItems[0].Url, new StringContent(content, Encoding.UTF8, "application/json")).Result.Content.ReadAsStringAsync().Result;
+
+
+        Console.WriteLine(s);
     }
 }
