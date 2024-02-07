@@ -28,18 +28,27 @@ public class Program
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
+        foreach (var workitem in queryResult.WorkItems)
+        {
+            var workItemProperties =
+                JsonSerializer
+                    .Deserialize<WorkItemProperties>(client.GetAsync(workitem.Url)
+                        .Result
+                        .Content
+                        .ReadAsStringAsync()
+                        .Result);
 
-        var workItemProperties =
-            JsonSerializer
-                .Deserialize<WorkItemProperties>(client.GetAsync(queryResult.WorkItems[0].Url)
-                    .Result
-                    .Content
-                    .ReadAsStringAsync()
-                    .Result);
+            if (workItemProperties?.Fields.AcceptanceCriteria is null)
+                break;
+            
+            var imageLinks = workItemProperties.Fields.AcceptanceCriteria.GetImageLinks();
 
-        var imageLinks = workItemProperties?.Fields.AcceptanceCriteria.GetImageLinks();
-        
-        imageLinks.ForEach(x => Console.WriteLine(x));
+            if (imageLinks == null)
+                break;
+            
+            imageLinks.ForEach(x => Console.WriteLine(x));
+        }
+
     }
 }
 
