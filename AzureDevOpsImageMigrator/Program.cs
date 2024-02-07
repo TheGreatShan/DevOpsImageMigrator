@@ -26,7 +26,7 @@ public class Program
         var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0",
             new StringContent(content, Encoding.UTF8, "application/json")).Result;
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
-        queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
+        // queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
         foreach (var workitem in queryResult.WorkItems)
         {
