@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AzureDevOpsImageMigrator.services;
+using static AzureDevOpsImageMigrator.services.ImageMigrator;
 
 namespace AzureDevOpsImageMigrator;
 
@@ -36,7 +37,9 @@ public class Program
                     .ReadAsStringAsync()
                     .Result);
 
-        Console.WriteLine(workItemProperties);
+        var imageLinks = workItemProperties?.Fields.AcceptanceCriteria.GetImageLinks();
+        
+        imageLinks.ForEach(x => Console.WriteLine(x));
     }
 }
 
