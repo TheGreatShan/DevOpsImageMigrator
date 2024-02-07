@@ -28,9 +28,20 @@ public class Program
         queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
 
-        var s = client.PostAsync(queryResult.WorkItems[0].Url, new StringContent(content, Encoding.UTF8, "application/json")).Result.Content.ReadAsStringAsync().Result;
+        var workItemProperties =
+            JsonSerializer
+                .Deserialize<WorkItemProperties>(client.GetAsync(queryResult.WorkItems[0].Url)
+                    .Result
+                    .Content
+                    .ReadAsStringAsync()
+                    .Result);
 
-
-        Console.WriteLine(s);
+        Console.WriteLine(workItemProperties);
     }
 }
+
+public record WorkItemProperties([property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("fields")] Fields Fields);
+
+public record Fields([property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
+    string AcceptanceCriteria);
