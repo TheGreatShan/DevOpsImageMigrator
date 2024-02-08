@@ -27,7 +27,7 @@ public class Program
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         // queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
-        var imageLinks = new List<string>();
+        var imageLinks = new List<Images>();
         foreach (var workitem in queryResult.WorkItems)
         {
             var workItemProperties =
@@ -39,13 +39,15 @@ public class Program
                         .Result);
 
             if (workItemProperties?.Fields.AcceptanceCriteria is not null)
-                workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(x));
+                workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(new(
+                    workitem.Id, x)));
 
             if (workItemProperties?.Fields.Description is not null)
-                workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(x));
+                workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(new (workitem.Id, x)));
         }
 
-        imageLinks.ForEach(x => Console.WriteLine(x));
+        imageLinks.ForEach(x => Console.WriteLine(x.OldId + "_" + x.Url));
     }
 }
 
+record Images(int OldId, string Url);
