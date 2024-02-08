@@ -26,6 +26,16 @@ public record Column(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("url")] string Url);
 
+public record WorkItemProperties([property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("fields")] Fields Fields);
+
+public record Fields(
+    [property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
+    string AcceptanceCriteria,
+    [property: JsonPropertyName("System.Description")]
+    string Description
+);
+
 internal static class ImageMigrator
 {
     internal static List<string> GetImageLinks(this string html)

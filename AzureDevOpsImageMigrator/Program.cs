@@ -40,22 +40,12 @@ public class Program
 
             if (workItemProperties?.Fields.AcceptanceCriteria is not null)
                 workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(x));
-            
+
             if (workItemProperties?.Fields.Description is not null)
                 workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(x));
         }
-        imageLinks.ForEach(x => Console.WriteLine(x));
 
+        imageLinks.ForEach(x => Console.WriteLine(x));
     }
 }
 
-public record WorkItemProperties([property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("fields")] Fields Fields);
-
-public record Fields(
-    [property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
-    string AcceptanceCriteria,
-    [property: JsonPropertyName("System.Description")]
-    string Description
-    
-    );
