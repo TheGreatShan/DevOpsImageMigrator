@@ -27,27 +27,10 @@ public class Program
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         // queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
-        var imageLinks = new List<Images>();
-        foreach (var workitem in queryResult.WorkItems)
-        {
-            var workItemProperties =
-                JsonSerializer
-                    .Deserialize<WorkItemProperties>(client.GetAsync(workitem.Url)
-                        .Result
-                        .Content
-                        .ReadAsStringAsync()
-                        .Result);
+        var imagesList = client.GetImages(queryResult);
 
-            if (workItemProperties?.Fields.AcceptanceCriteria is not null)
-                workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(new(
-                    workitem.Id, x)));
 
-            if (workItemProperties?.Fields.Description is not null)
-                workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(new (workitem.Id, x)));
-        }
-
-        imageLinks.ForEach(x => Console.WriteLine(x.OldId + "_" + x.Url));
+        imagesList.ForEach(x => Console.WriteLine(x.OldId + "_" + x.Url));
     }
 }
 
-record Images(int OldId, string Url);

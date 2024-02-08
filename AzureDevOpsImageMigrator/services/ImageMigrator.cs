@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using HtmlAgilityPack;
 
@@ -36,8 +38,32 @@ public record Fields(
     string Description
 );
 
+public record Images(int OldId, string Url);
 internal static class ImageMigrator
 {
+    internal static List<Images> GetImages(this HttpClient client, QueryResult queryResult)
+    {
+        var imageLinks = new List<Images>();
+        foreach (var workitem in queryResult.WorkItems)
+        {
+            var workItemProperties =
+                JsonSerializer
+                    .Deserialize<WorkItemProperties>(client.GetAsync(workitem.Url)
+                        .Result
+                        .Content
+                        .ReadAsStringAsync()
+                        .Result);
+
+            if (workItemProperties?.Fields.AcceptanceCriteria is not null)
+                workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(new(
+                    workitem.Id, x)));
+
+            if (workItemProperties?.Fields.Description is not null)
+                workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(new (workitem.Id, x)));
+        }
+
+        return imageLinks;
+    }
     internal static List<string> GetImageLinks(this string html)
     {
         var imageLinks = new List<string>();
