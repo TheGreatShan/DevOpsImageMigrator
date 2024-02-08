@@ -2,7 +2,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AzureDevOpsImageMigrator.services;
-using static AzureDevOpsImageMigrator.services.ImageMigrator;
 
 namespace AzureDevOpsImageMigrator;
 
@@ -28,6 +27,7 @@ public class Program
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         // queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
 
+        var imageLinks = new List<string>();
         foreach (var workitem in queryResult.WorkItems)
         {
             var workItemProperties =
@@ -38,16 +38,13 @@ public class Program
                         .ReadAsStringAsync()
                         .Result);
 
-            if (workItemProperties?.Fields.AcceptanceCriteria is null)
-                break;
+            if (workItemProperties?.Fields.AcceptanceCriteria is not null)
+                workItemProperties.Fields.AcceptanceCriteria.GetImageLinks().ForEach(x => imageLinks.Add(x));
             
-            var imageLinks = workItemProperties.Fields.AcceptanceCriteria.GetImageLinks();
-
-            if (imageLinks == null)
-                break;
-            
-            imageLinks.ForEach(x => Console.WriteLine(x));
+            if (workItemProperties?.Fields.Description is not null)
+                workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(x));
         }
+        imageLinks.ForEach(x => Console.WriteLine(x));
 
     }
 }
@@ -55,5 +52,10 @@ public class Program
 public record WorkItemProperties([property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("fields")] Fields Fields);
 
-public record Fields([property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
-    string AcceptanceCriteria);
+public record Fields(
+    [property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
+    string AcceptanceCriteria,
+    [property: JsonPropertyName("System.Description")]
+    string Description
+    
+    );
