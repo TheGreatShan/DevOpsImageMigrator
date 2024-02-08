@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AzureDevOpsImageMigrator.services;
+using static AzureDevOpsImageMigrator.services.ImageMigrator;
 
 namespace AzureDevOpsImageMigrator;
 
@@ -16,17 +17,7 @@ public class Program
             new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedPat);
 
 
-        var query = new
-        {
-            query = "Select [System.Id], [System.Title], [System.State] From WorkItems"
-        };
-
-        var content = JsonSerializer.Serialize(query);
-        var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0",
-            new StringContent(content, Encoding.UTF8, "application/json")).Result;
-        var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
-        // queryResult.WorkItems.ForEach(x => Console.WriteLine(x.Url));
-
+        var queryResult = client.GetWorkItems(appSettings);
         var imagesList = client.GetImages(queryResult);
 
 

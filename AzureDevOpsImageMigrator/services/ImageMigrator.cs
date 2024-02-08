@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HtmlAgilityPack;
@@ -64,6 +65,21 @@ internal static class ImageMigrator
 
         return imageLinks;
     }
+    
+    internal static QueryResult? GetWorkItems(this HttpClient client, AppSettings appSettings)
+    {
+        var query = new
+        {
+            query = "Select [System.Id], [System.Title], [System.State] From WorkItems"
+        };
+
+        var content = JsonSerializer.Serialize(query);
+        var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0",
+            new StringContent(content, Encoding.UTF8, "application/json")).Result;
+        var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
+        return queryResult;
+    }
+    
     internal static List<string> GetImageLinks(this string html)
     {
         var imageLinks = new List<string>();
