@@ -74,7 +74,7 @@ internal static class ImageMigrator
         };
 
         var content = JsonSerializer.Serialize(query);
-        var result = client.PostAsync($"{appSettings.FromUrl}_apis/wit/wiql?api-version=6.0",
+        var result = client.PostAsync($"{appSettings.FromUrl}{appSettings.FromProject}/_apis/wit/wiql?api-version=6.0",
             new StringContent(content, Encoding.UTF8, "application/json")).Result;
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
         return queryResult;

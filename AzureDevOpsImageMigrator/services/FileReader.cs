@@ -12,4 +12,4 @@ internal class FileReader
         ReadFile<AppSettings>(path) ?? throw new Exception("AppSettings not found");
 }
 
-public record AppSettings(string FromUrl, string FromUser, string FromPat, string ToUrl, string ToUser, string ToPat);
+public record AppSettings(string FromUrl, string FromProject, string FromUser, string FromPat, string ToUrl, string ToProject, string ToUser, string ToPat);
