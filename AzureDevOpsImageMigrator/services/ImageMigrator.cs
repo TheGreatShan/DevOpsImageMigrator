@@ -85,25 +85,6 @@ internal static class ImageMigrator
         return queryResult ?? throw new Exception("No work items found");
     }
 
-    private static List<string> GetImageLinks(this string html)
-    {
-        var imageLinks = new List<string>();
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-
-        var nodes = doc.DocumentNode.SelectNodes("//img");
-        if (nodes != null)
-        {
-            foreach (var node in nodes)
-            {
-                var src = node.GetAttributeValue("src", "");
-                if (!string.IsNullOrEmpty(src))
-                    imageLinks.Add(src);
-            }
-        }
-
-        return imageLinks;
-    }
 
     internal static List<ImageStream> GetImageStream(this List<Images> images, HttpClient client)
     {
@@ -135,6 +116,7 @@ internal static class ImageMigrator
 
         return memoryStream;
     }
+    
     // TODO Filepath should be adjustable with a config file
     internal static string SaveImage(this MemoryStream stream)
     {
