@@ -23,6 +23,7 @@ public class Program
             .GetImageStream(client)
             .GetImageStream(client)
             .SaveImage(client);
+        
         Console.WriteLine(imageList);
     }
 }

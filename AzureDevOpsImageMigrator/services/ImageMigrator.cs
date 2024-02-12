@@ -46,7 +46,7 @@ public record Images(int OldId, string Url);
 
 internal static class ImageMigrator
 {
-    internal static List<Images> GetImages(this QueryResult queryResult, HttpClient client)
+    internal static List<Images> GetImages(this QueryResult? queryResult, HttpClient client)
     {
         var imageLinks = new List<Images>();
         foreach (var workitem in queryResult.WorkItems)
@@ -82,10 +82,10 @@ internal static class ImageMigrator
         var result = client.PostAsync($"{appSettings.FromUrl}{appSettings.FromProject}/_apis/wit/wiql?api-version=6.0",
             new StringContent(content, Encoding.UTF8, "application/json")).Result;
         var queryResult = JsonSerializer.Deserialize<QueryResult>(result.Content.ReadAsStringAsync().Result);
-        return queryResult;
+        return queryResult ?? throw new Exception("No work items found");
     }
 
-    internal static List<string> GetImageLinks(this string html)
+    private static List<string> GetImageLinks(this string html)
     {
         var imageLinks = new List<string>();
         var doc = new HtmlDocument();
