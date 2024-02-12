@@ -1,8 +1,5 @@
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using HtmlAgilityPack;
 using Ionic.Zip;
 
 namespace AzureDevOpsImageMigrator.services;
@@ -57,8 +54,9 @@ internal static class ImageMigrator
         {
             var bytes = client.GetAsync(image.Url).Result.Content.ReadAsByteArrayAsync().Result;
             var memoryStream = new MemoryStream(bytes);
-            var stream = new ImageStream(image.OldId, memoryStream, image.Url.GetIdAndName().Item2, image.Url.GetIdAndName().Item1);
-            
+            var stream = new ImageStream(image.OldId, memoryStream, image.Url.GetIdAndName().Item2,
+                image.Url.GetIdAndName().Item1);
+
             var any = imageStreams.Any(x => x.FileId == image.Url.GetIdAndName().Item1);
             if (any)
                 continue;
@@ -68,7 +66,7 @@ internal static class ImageMigrator
 
         return imageStreams;
     }
-    
+
     internal static MemoryStream GetImageStream(this List<ImageStream> streams)
     {
         var memoryStream = new MemoryStream();
@@ -79,7 +77,7 @@ internal static class ImageMigrator
 
         return memoryStream;
     }
-    
+
     // TODO Filepath should be adjustable with a config file
     internal static string SaveImage(this MemoryStream stream)
     {

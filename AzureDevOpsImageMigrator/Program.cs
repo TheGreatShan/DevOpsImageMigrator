@@ -1,8 +1,5 @@
 ﻿using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using AzureDevOpsImageMigrator.services;
-using static AzureDevOpsImageMigrator.services.ImageMigrator;
 
 namespace AzureDevOpsImageMigrator;
 
@@ -23,8 +20,7 @@ public class Program
             .GetImageStream(client)
             .GetImageStream()
             .SaveImage();
-        
+
         Console.WriteLine(imageList);
     }
 }
-
