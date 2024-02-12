@@ -70,7 +70,7 @@ internal static class ImageMigrator
     {
         var query = new
         {
-            query = "Select [System.Id], [System.Title], [System.State] From WorkItems"
+            query = $"Select [System.Id], [System.Title], [System.State] From WorkItems WHERE [System.TeamProject] = \"{appSettings.FromProject.Replace("%20", " ")}\""
         };
 
         var content = JsonSerializer.Serialize(query);
