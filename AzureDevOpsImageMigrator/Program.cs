@@ -17,11 +17,13 @@ public class Program
             new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedPat);
 
 
-        var queryResult = client.GetWorkItems(appSettings);
-        var imagesList = client.GetImages(queryResult);
-
-
-        imagesList.ForEach(x => Console.WriteLine(x.OldId + "_" + x.Url));
+        var imageList = client
+            .GetWorkItems(appSettings)
+            .GetImages(client)
+            .GetImageStream(client)
+            .GetImageStream(client)
+            .SaveImage(client);
+        Console.WriteLine(imageList);
     }
 }
 
