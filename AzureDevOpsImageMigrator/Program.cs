@@ -21,8 +21,8 @@ public class Program
             .GetWorkItems(appSettings)
             .GetImages(client)
             .GetImageStream(client)
-            .GetImageStream(client)
-            .SaveImage(client);
+            .GetImageStream()
+            .SaveImage();
         
         Console.WriteLine(imageList);
     }
