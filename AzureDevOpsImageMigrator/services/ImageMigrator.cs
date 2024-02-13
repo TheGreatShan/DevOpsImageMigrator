@@ -26,6 +26,12 @@ internal static class ImageMigrator
 
             if (workItemProperties?.Fields.Description is not null)
                 workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(new(workitem.Id, x)));
+           
+            if (workItemProperties?.Fields.SystemInfo is not null)
+                workItemProperties.Fields.SystemInfo.GetImageLinks().ForEach(x => imageLinks.Add(new(workitem.Id, x)));
+            
+            if (workItemProperties?.Fields.ReproSteps is not null)
+                workItemProperties.Fields.ReproSteps.GetImageLinks().ForEach(x => imageLinks.Add(new(workitem.Id, x)));
 
             if (workItemProperties.Links.WorkItemComments.Href is not null)
             {

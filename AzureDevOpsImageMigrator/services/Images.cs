@@ -37,7 +37,11 @@ public record WorkItemComments([property: JsonPropertyName("href")] string Href)
 
 public record Fields(
     [property: JsonPropertyName("Microsoft.VSTS.Common.AcceptanceCriteria")]
-    string AcceptanceCriteria,
+    string AcceptanceCriteria,    
+    [property: JsonPropertyName("Microsoft.VSTS.TCM.SystemInfo")]
+    string SystemInfo,
+    [property: JsonPropertyName("Microsoft.VSTS.TCM.ReproSteps")]
+    string ReproSteps,
     [property: JsonPropertyName("System.Description")]
     string Description
 );
