@@ -24,9 +24,6 @@ internal static class ImageService
         return imageLinks;
     }
 
-    internal static (string, string) GetIdAndName(this string fileName)
-    {
-        Console.WriteLine((fileName.Split("/").Last().Split("?").First(), fileName.Split("=").Last()));
-        return (fileName.Split("/").Last().Split("?").First(), fileName.Split("=").Last());
-    }
+    internal static (string, string) GetIdAndName(this string fileName) => 
+        (fileName.Split("/").Last().Split("?").First(), fileName.Split("=").Last());
 }
