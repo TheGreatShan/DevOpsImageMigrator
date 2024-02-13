@@ -76,7 +76,7 @@ internal static class ImageMigrator
             var bytes = new byte[] { };
 
             if (image.Url.Contains("data"))
-                bytes = Convert.FromBase64String(image.Url);
+                bytes = Convert.FromBase64String(image.Url.Split(",")[1]);
             else
                 bytes = client.GetAsync(image.Url).Result.Content.ReadAsByteArrayAsync().Result;
             
