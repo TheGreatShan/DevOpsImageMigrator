@@ -73,7 +73,13 @@ internal static class ImageMigrator
 
         foreach (var image in images)
         {
-            var bytes = client.GetAsync(image.Url).Result.Content.ReadAsByteArrayAsync().Result;
+            var bytes = new byte[] { };
+
+            if (image.Url.Contains("data"))
+                bytes = Convert.FromBase64String(image.Url);
+            else
+                bytes = client.GetAsync(image.Url).Result.Content.ReadAsByteArrayAsync().Result;
+            
             var memoryStream = new MemoryStream(bytes);
             var stream = new ImageStream(image.OldId, memoryStream, image.Url.GetIdAndName().Item2,
                 image.Url.GetIdAndName().Item1);
