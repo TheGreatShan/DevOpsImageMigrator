@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Ionic.Zip;
 
 namespace AzureDevOpsImageMigrator.services;
@@ -25,6 +26,18 @@ internal static class ImageMigrator
 
             if (workItemProperties?.Fields.Description is not null)
                 workItemProperties.Fields.Description.GetImageLinks().ForEach(x => imageLinks.Add(new(workitem.Id, x)));
+
+            if (workItemProperties.Links.WorkItemComments.Href is not null)
+            {
+                var comments = JsonSerializer
+                    .Deserialize<CommentResult>(client.GetAsync(workItemProperties.Links.WorkItemComments.Href)
+                        .Result
+                        .Content
+                        .ReadAsStringAsync()
+                        .Result);
+
+                comments.Comments.ForEach(x => x.Text.GetImageLinks().ForEach(y => imageLinks.Add(new(x.WorkItemId, y))));
+            }
         }
 
         return imageLinks;
