@@ -36,6 +36,7 @@ public class Program
         }
         finally
         {
+            client.Dispose();
             Console.ReadKey();
         }
     }
