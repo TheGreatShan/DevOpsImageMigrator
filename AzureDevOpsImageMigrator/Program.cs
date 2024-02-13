@@ -13,19 +13,30 @@ public class Program
             .CreateLogger();
 
         var appSettings = FileReader.ReadAppSettings("appsettings.json");
-        logger.Information("AppSettings: Project: {project}; User: {user}", appSettings.FromProject, appSettings.FromUser);
+        logger.Information("AppSettings: Project: {project}; User: {user}", appSettings.FromProject,
+            appSettings.FromUser);
 
         var encodedPat = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{appSettings.FromPat}"));
         var client = new HttpClient();
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedPat);
 
-
-        client
-            .GetWorkItems(appSettings, logger)
-            .GetImages(client)
-            .GetImageStream(client, logger)
-            .GetImageStream(logger)
-            .SaveImage(logger);
+        try
+        {
+            client
+                .GetWorkItems(appSettings, logger)
+                .GetImages(client)
+                .GetImageStream(client, logger)
+                .GetImageStream(logger)
+                .SaveImage(logger);
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "Error occurred");
+        }
+        finally
+        {
+            Console.ReadKey();
+        }
     }
 }
